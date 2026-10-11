@@ -39,9 +39,9 @@ $('rank-more').hidden=ranking.length<=3;$('rank-more').textContent=rankExpanded?
 function openRank(button){rankReturn=button;rankExpanded=false;$('ranking').hidden=false;renderRank();$('rank-close').focus()}
 $('rank-more').onclick=()=>{rankExpanded=!rankExpanded;renderRank()};
 $('rank-open').onclick=()=>openRank($('rank-open'));$('rank-end').onclick=()=>openRank($('rank-end'));$('rank-close').onclick=()=>{$('ranking').hidden=true;rankReturn?.focus()};
-const outfits={dudu:{hat:1,glasses:0,top:1,bottom:0,shoes:0},carol:{hat:2,glasses:0,top:0,bottom:0,shoes:0},joca:{hat:3,glasses:1,top:4,bottom:1,shoes:3}};
-const choices={hat:['Sem chapéu','Boné azul','Laço rosa','Chapéu de explorador','Coroa'],glasses:['Sem óculos','Óculos redondos','Óculos de sol','Óculos vermelhos'],top:['Sem camiseta','Camiseta azul','Camiseta rosa','Blusa roxa','Blusa laranja','Corinthians branca','Corinthians preta'],bottom:['Sem shorts','Shorts azul','Shorts vermelho','Calça roxa','Calça jeans'],shoes:['Sem tênis','Tênis vermelhos','Tênis azuis','Tênis amarelos']};
-try{const saved=JSON.parse(localStorage.getItem('sapinho-outfits-v1')||'{}');for(const who of ['dudu','carol','joca'])for(const slot of Object.keys(choices)){const n=saved[who]?.[slot];if(Number.isInteger(n)&&n>=0&&n<choices[slot].length)outfits[who][slot]=n}}catch{}
+const outfits={dudu:{hat:1,glasses:0,top:1,bottom:0,shoes:0},carol:{hat:2,glasses:0,top:0,bottom:0,shoes:0},joca:{hat:3,glasses:1,top:6,bottom:1,shoes:3}};
+const choices={hat:['Sem chapéu','Boné azul','Laço rosa','Chapéu de explorador','Coroa'],glasses:['Sem óculos','Óculos redondos','Óculos de sol','Óculos vermelhos'],top:['Sem camiseta','Corinthians branca','Corinthians preta','Camiseta azul','Camiseta rosa','Blusa roxa','Blusa laranja'],bottom:['Sem shorts','Shorts azul','Shorts vermelho','Calça roxa','Calça jeans'],shoes:['Sem tênis','Tênis vermelhos','Tênis azuis','Tênis amarelos']};
+try{const current=localStorage.getItem('sapinho-outfits-v2');const saved=JSON.parse(current||localStorage.getItem('sapinho-outfits-v1')||'{}');for(const who of ['dudu','carol','joca'])for(const slot of Object.keys(choices)){const n=saved[who]?.[slot];if(Number.isInteger(n)&&n>=0&&n<choices[slot].length)outfits[who][slot]=slot==='top'&&!current?[0,3,4,5,6,1,2][n]:n}}catch{}
 let night=false,raining=false,muted=false,rainSound=null,lastChime=-1;
 let frog={x:160,y:0,vy:0,facing:1},flies=[],particles=[],labels=[];
 const keys=new Set(),touches=new Map();
@@ -61,7 +61,9 @@ ellipse(c,footX,footY,22,9,'#279f50');if(o.shoes){const color=['','#ed6678','#53
 c.translate(0,Math.abs(walk)*-3);
 ellipse(c,0,-27,43,39,type==='joca'?'#65bb71':'#41c55c');ellipse(c,0,-19,26,24,'#b6eb72');
 if(o.bottom){const color=['','#377cce','#e46875','#7250ad','#357cc4'][o.bottom];ellipse(c,0,-5,31,13,color);path(c,[[0,-10],[0,6]],'#28495f',2)}
-if(o.top){const color=['','#3295e8','#ee7eaf','#9576d3','#efa24c','#fffdf5','#252932'][o.top];ellipse(c,0,-26,37,23,color);if(o.top===3||o.top===4){path(c,[[-31,-37],[-45,-15]],color,15);path(c,[[31,-37],[45,-15]],color,15)}c.save();c.beginPath();c.ellipse(0,-26,37,23,0,0,Math.PI*2);c.clip();if(o.top<5){c.fillStyle='#fff4d9';c.fillRect(-40,-28,80,5)}else{c.fillStyle=o.top===5?'#242831':'#fffdf5';if(o.top===6)for(let i=-30;i<40;i+=10)c.fillRect(i,-50,3,50);c.fillRect(-40,-43,80,5)}c.restore();if(o.top>=5){ellipse(c,-17,-32,7,9,'#fff');c.strokeStyle='#242831';c.lineWidth=1.5;c.beginPath();c.ellipse(-17,-32,7,9,0,0,Math.PI*2);c.stroke();path(c,[[-21,-36],[-13,-28],[-13,-36],[-21,-28]],'#cd4349',1.5);ellipse(c,-17,-33,3,3,'#242831')}}
+if(o.top){const color=['','#fffdf5','#252932','#3295e8','#ee7eaf','#9576d3','#efa24c'][o.top];ellipse(c,0,-26,37,23,color);if(o.top===5||o.top===6){path(c,[[-31,-37],[-45,-15]],color,15);path(c,[[31,-37],[45,-15]],color,15)}c.save();c.beginPath();c.ellipse(0,-26,37,23,0,0,Math.PI*2);c.clip();if(o.top>=3){c.fillStyle='#fff4d9';c.fillRect(-40,-28,80,5)}else{c.fillStyle=o.top===1?'#242831':'#fffdf5';if(o.top===2)for(let i=-30;i<40;i+=10)c.fillRect(i,-50,3,50);c.fillRect(-40,-43,80,5)}c.restore()}
+// Badge sits on the exposed chest, below the face, with a white backing.
+if(o.top===1||o.top===2){c.save();c.translate(-17,-12);ellipse(c,0,0,9,10,'#fffdf5');path(c,[[-7,-7],[7,7]],'#cc3948',2);path(c,[[7,-7],[-7,7]],'#cc3948',2);path(c,[[0,-9],[0,8]],'#cc3948',2);c.strokeStyle='#30313a';c.lineWidth=1.6;c.beginPath();c.arc(0,0,6,0,Math.PI*2);c.stroke();ellipse(c,0,0,3,3,'#30313a');path(c,[[-7,6],[0,10],[7,6]],'#cc3948',2);c.restore()}
 ellipse(c,0,-49,43,26,type==='joca'?'#65bb71':'#41c55c');
 for(const ex of [-24,24]){ellipse(c,ex,-68,19,22,type==='joca'?'#65bb71':'#41c55c');ellipse(c,ex,-69,13,16,'#fff');ellipse(c,ex+(aura?5:3),-67,aura?5:6,9,'#253f41');ellipse(c,ex+5,-70,2,3,'#fff')}
 ellipse(c,-31,-43,7,4,'#ff9db7');ellipse(c,31,-43,7,4,'#ff9db7');
@@ -78,7 +80,7 @@ function showSetup(step){setupStep=step;for(let i=0;i<4;i++)$('setup-'+i).hidden
 $('name-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value.trim().replace(/\s+/g,' ').slice(0,24);if(!name){$('name-error').textContent='Digite um nome ou apelido para continuar.';$('player-name').focus();return}playerName=name;$('name-error').textContent='';showSetup(1)});
 $('dress').onclick=()=>showSetup(2);$('dress-done').onclick=()=>showSetup(3);
 for(const b of document.querySelectorAll('[data-back]'))b.onclick=()=>showSetup(Number(b.dataset.back));
-for(const b of document.querySelectorAll('[data-slot]'))b.onclick=()=>{const slot=b.dataset.slot;outfits[character][slot]=(outfits[character][slot]+1)%choices[slot].length;$('outfit-label').textContent=choices[slot][outfits[character][slot]];refreshOutfits();try{localStorage.setItem('sapinho-outfits-v1',JSON.stringify(outfits))}catch{}};
+for(const b of document.querySelectorAll('[data-slot]'))b.onclick=()=>{const slot=b.dataset.slot;outfits[character][slot]=(outfits[character][slot]+1)%choices[slot].length;$('outfit-label').textContent=choices[slot][outfits[character][slot]];refreshOutfits();try{localStorage.setItem('sapinho-outfits-v2',JSON.stringify(outfits))}catch{}};
 // Audio is synthesized locally; collection notes are capped during magnetic combos.
 function ensureAudio(){try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume().catch(()=>{});return audio}catch{return null}}
 function captureSound(gold){if(muted||!ensureAudio())return;const now=audio.currentTime;if(now-lastChime<.075)return;lastChime=now;
