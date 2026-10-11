@@ -6,9 +6,10 @@ Jogo infantil em um único arquivo HTML, com CSS e JavaScript integrados, sem de
 
 Abra `sapinho-comilao.html` em um navegador. Esse é o arquivo principal e a versão atual do jogo.
 
-- Seis fases de um minuto, com comidas e cenários diferentes.
-- Dudu e Carol com guarda-roupa personalizável salvo no navegador.
+- Sete fases livres, incluindo o Fundo da Lagoa, com largada e chegada em percursos de cerca de 30 segundos andando para a direita, sem cronômetro.
+- Dudu, Carol, Joca e Olivia com guarda-roupa personalizável salvo no navegador.
 - Dia, noite, chuva, sons sintetizados e superpoder automático.
+- Escolha de fases após o look e botão para sair da fase; pontuações salvas por fase concluída.
 - Controles de teclado e botões de toque.
 
 ## Teclado
