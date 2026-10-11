@@ -26,4 +26,8 @@ Abra `sapinho-comilao.html` em um navegador. Esse é o arquivo principal e a ver
 
 Edite `sapinho-comilao.html` e recarregue o navegador. Não há instalação nem etapa de compilação.
 
-Os arquivos em `dist/` e `.openai/` vieram da configuração inicial do projeto e não representam a versão atual do jogo. Para uma futura publicação, use o HTML principal como `index.html` na pasta de publicação.
+## Publicação
+
+O workflow `.github/workflows/pages.yml` publica automaticamente o jogo no GitHub Pages quando o HTML é atualizado em `main`. Ele copia somente `sapinho-comilao.html` para `index.html` na pasta publicada. Ative Pages em Settings → Pages, com a origem GitHub Actions.
+
+Os arquivos em `dist/` e `.openai/` vieram da configuração inicial e não são utilizados nessa publicação.
