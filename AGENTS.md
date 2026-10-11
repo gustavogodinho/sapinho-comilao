@@ -3,6 +3,6 @@
 ## Mensagens de commit
 
 Use mensagens simples e descritivas, preferencialmente em português, que expliquem a alteração.
-Não use prefixos de commits semânticos ou Conventional Commits, como `feat:`, `fix:`, `chore:`, `docs:` ou `refactor:`.
+Prefixos de commits semânticos ou Conventional Commits, como `feat:`, `fix:`, `chore:`, `docs:` ou `refactor:`, são permitidos, mas não obrigatórios.
 
-Exemplo: `Melhora os controles de toque no celular`.
+Exemplos: `Melhora os controles de toque no celular` ou `fix: melhora os controles de toque no celular`.
