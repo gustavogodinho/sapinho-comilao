@@ -5,13 +5,13 @@ const {join}=require('node:path');
 const vm=require('node:vm');
 
 // Run the actual game script with a minimal DOM. No test hooks ship in the game.
-function game(){
+function game(saved={}){
   const noop=()=>{};
   const context=new Proxy({}, {get:(_,key)=>key==='createLinearGradient'?()=>({addColorStop:noop}):noop,set:()=>true});
   const elements=new Map();
   const element=()=>({hidden:false,style:{},dataset:{},value:'Teste',events:{},classList:{add:noop,remove:noop},getContext:()=>context,getBoundingClientRect:()=>({width:1000,height:650}),addEventListener(type,callback){this.events[type]=callback},setPointerCapture:noop,setAttribute:noop,append:noop,appendChild:noop,replaceChildren:noop,focus:noop});
   const document={hidden:false,getElementById:id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id)},querySelectorAll:()=>[],createElement:element,createTextNode:x=>x,addEventListener:noop};
-  const sandbox=vm.createContext({document,window:{addEventListener:noop},localStorage:{getItem:()=>null,setItem:noop},devicePixelRatio:1,requestAnimationFrame:noop,console});
+  const sandbox=vm.createContext({document,window:{addEventListener:noop},localStorage:{getItem:key=>saved[key]??null,setItem:(key,value)=>{saved[key]=value}},devicePixelRatio:1,requestAnimationFrame:noop,console});
   let script=readFileSync(join(__dirname,'../sapinho-comilao.html'),'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
   script=script.replace(/\}\)\(\);\s*$/,`globalThis.run=code=>eval(code);})();`);
   vm.runInContext(script,sandbox);
@@ -115,4 +115,28 @@ test('dois dedos permitem segurar direção e pular; cancelar o toque para o mov
   const x=run('frog.x');
   run('for(let i=0;i<30;i++)update(1/60)');
   assert.equal(run('frog.x'),x);
+});
+
+test('pontuações de Rafa e Helena continuam no ranking após reabrir o jogo',()=>{
+  const saved={'sapinho-ranking-v1':JSON.stringify([{character:'dudu',score:30,caught:3,date:'2026-10-19T12:00:00Z'}])};
+  const run=game(saved);
+  for(const who of ['rafa','helena'])run(`character='${who}';restart();score=100;caught=6;finish()`);
+  const reopened=game(saved);
+  assert.deepEqual(JSON.parse(reopened('JSON.stringify(ranking.map(r=>r.character))')),['rafa','helena','dudu']);
+  assert.doesNotThrow(()=>reopened('renderRank()'));
+});
+
+test('guarda-roupa restaura novos e antigos personagens e rejeita opções inválidas',()=>{
+  const saved={'sapinho-outfits-v2':JSON.stringify({dudu:{hat:4,top:2},rafa:{hat:3,glasses:2,top:6,bottom:1,shoes:2},helena:{hat:5,top:5,shoes:999}})};
+  const run=game(saved);
+  assert.equal(run('outfits.dudu.hat'),4);
+  assert.equal(run('outfits.dudu.top'),2);
+  assert.equal(run('outfits.rafa.hat'),3);
+  assert.equal(run('outfits.rafa.top'),6);
+  assert.equal(run('outfits.helena.hat'),5);
+  assert.equal(run('outfits.helena.top'),5);
+  assert.equal(run('outfits.helena.shoes'),3);
+  for(const who of ['rafa','helena']){
+    for(let stage=0;stage<8;stage++)assert.doesNotThrow(()=>run(`character='${who}';level=${stage};restart();jump();update(1/60);draw()`));
+  }
 });
