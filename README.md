@@ -6,9 +6,12 @@ Jogo infantil em um único arquivo HTML, com CSS e JavaScript integrados, sem de
 
 Abra `sapinho-comilao.html` em um navegador. Esse é o arquivo principal e a versão atual do jogo.
 
-- Oito fases livres, incluindo o Fundo da Lagoa e a Travessia da Lagoa, todas sem cronômetro. As sete aventuras originais têm percursos de cerca de 30 segundos andando para a direita.
+- Nove fases livres, incluindo o Fundo da Lagoa, a Travessia da Lagoa e a Travessia da Marginal, todas sem cronômetro. As sete aventuras originais têm percursos de cerca de 30 segundos andando para a direita.
 - Na Travessia da Lagoa, pule entre vitórias-régias, folhas móveis e troncos até a outra margem. O percurso foi pensado para crianças de 7 anos, com duração aproximada de um minuto ao acertar os pulos.
 - Colete mosquinhas e mosquinhas douradas. Cair na água devolve o sapinho à última folha segura, sem perder pontos nem vidas. O superpoder automático atrai alimentos e cria uma bolha que permite pisar na água por sete segundos.
+- Na Travessia da Marginal, cada toque dá um pulinho em uma das quatro direções. Atravesse seis trechos com carros e ônibus, espere nos canteiros e colete mosquinhas nas áreas seguras. Colisões devolvem o sapinho ao último canteiro, sem perder pontos ou vidas. Quatro alimentos ativam sete segundos de trânsito lento; os veículos continuam sendo obstáculos.
+- O cenário da Marginal é uma interpretação ilustrada da região da Ponte Estaiada, com rio, prédios, cabos da ponte, ciclovia, asfalto e veículos vistos de cima. Referência: [Ponte Octavio Frias de Oliveira, Prefeitura de São Paulo](https://www.prefeitura.sp.gov.br/web/comunicacao/w/noticias/125744).
+- Os ícones das fases representam seus alimentos ou percursos: mosca, mosquito, grilo, mariposa, besouro, minhoca, camarão, vitória-régia e avenida.
 - Seis personagens com guarda-roupa personalizável salvo no navegador: Dudu, Carol, Joca, Olivia, Rafa e Helena.
 - Rafa tem cachinhos ruivos volumosos, olhos azuis, sardinhas e um sorriso com dois dentinhos, inspirado no Dennis de Hotel Transilvânia. Helena tem tons de lavanda, olhos violetas e uma flor da lagoa, também disponível no guarda-roupa dos outros sapinhos.
 - Dia, noite, chuva, sons sintetizados e superpoder automático.
@@ -21,6 +24,7 @@ Abra `sapinho-comilao.html` em um navegador. Esse é o arquivo principal e a ver
 | --- | --- |
 | Andar | Setas esquerda/direita ou A/D |
 | Pular | Espaço, W ou seta para cima |
+| Pular na Marginal | Setas ou WASD; espaço também avança. Um pulo por toque. |
 | Coaxar | X |
 | Dia/noite | N |
 | Chuva | C |
@@ -30,7 +34,7 @@ Abra `sapinho-comilao.html` em um navegador. Esse é o arquivo principal e a ver
 
 Edite `sapinho-comilao.html` e recarregue o navegador. Não há instalação nem etapa de compilação.
 
-Para verificar a física da travessia, as fases originais e os personagens salvos, execute `node --test tests/travessia.test.cjs` (Node.js, sem dependências).
+Para verificar as travessias, colisões, controles, superpoderes, fases originais e personagens salvos, execute `node --test tests/*.test.cjs` (Node.js, sem dependências).
 
 ## Publicação
 

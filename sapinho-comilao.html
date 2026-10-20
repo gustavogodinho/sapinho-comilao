@@ -16,11 +16,15 @@
 .characters{flex-wrap:wrap;justify-content:center;gap:10px}.character{width:140px}.character canvas{width:110px;height:105px}@media(max-width:520px){.character{width:calc((100% - 20px)/3);min-width:80px;padding:6px 2px;font-size:13px}.character canvas{width:100%;height:85px}}
 
 .level-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}.level-list button{border:2px solid #bedccf;box-shadow:0 3px #b4d5c2;background:#edf6e8;padding:16px 8px;font-size:16px}.level-list button:last-child{background:#c5f3ef;border-color:#62b8bd}.level-list button:last-child:nth-child(odd){grid-column:1/-1}.level-icon{display:block;font-size:32px;margin-bottom:6px}#exit-level{position:absolute;left:12px;top:110px;font-size:14px;padding:10px;z-index:2}#exit-level[hidden],#ready-preview[hidden],#play[hidden]{display:none}.characters .character{width:calc((100% - 10px)/2)}.characters{width:100%}.character canvas{max-width:110px}@media(max-height:600px){.level-list button{padding:8px}.level-icon{font-size:24px;margin:0}}
+
+.level-icon svg{display:block;width:48px;height:48px;margin:0 auto 5px}.level-list button:last-child{background:#dce9f4;border-color:#8cabc1}
+#road-controls{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:grid;grid-template-areas:". up ." "left down right";gap:6px;z-index:2}#road-controls[hidden]{display:none}#road-controls button{width:58px;height:55px;padding:3px;font-size:29px;background:#fff3be;box-shadow:0 3px #244936}#road-up{grid-area:up;background:#ffe06c!important}#road-left{grid-area:left}#road-right{grid-area:right}#road-down{grid-area:down}
+@media(max-height:600px){.level-icon svg{width:32px;height:32px}#road-controls{grid-template-areas:"left up down right"}#road-controls button{width:54px;height:50px}}
 </style>
 </head><body>
-<canvas id="game" aria-label="Caminho do Sapinho Comilão. Use as setas para andar, espaço para pular, X para coaxar e Z para o especial."></canvas>
-<section class="overlay" id="start"><h1>O Sapinho Comilão</h1><nav class="steps" aria-label="Etapas de preparação"><span data-step="0">✎</span><span data-step="1">🐸</span><span data-step="2">👕</span><span data-step="3">🗺</span></nav><div class="setup-card"><div id="setup-0" class="setup-panel"><h2>Como você se chama?</h2><form id="name-form"><label class="sr" for="player-name">Nome do jogador</label><input id="player-name" type="text" maxlength="24" autocomplete="nickname" placeholder="Seu nome ou apelido" enterkeyhint="next" required><button type="submit" class="setup-next" aria-label="Escolher sapinho">▶</button></form><p id="name-error" aria-live="polite"></p></div><div id="setup-1" class="setup-panel" hidden><h2>Escolha seu sapinho</h2><div class="characters"><button class="character" data-character="dudu" aria-pressed="true"><canvas id="dudu" width="240" height="230" aria-hidden="true"></canvas>Sapo Dudu</button><button class="character" data-character="carol" aria-pressed="false"><canvas id="carol" width="240" height="230" aria-hidden="true"></canvas>Sapo Carol</button><button class="character" data-character="joca" aria-pressed="false"><canvas id="joca" width="240" height="230" aria-hidden="true"></canvas>Sapo Joca</button><button class="character" data-character="olivia" aria-pressed="false"><canvas id="olivia" width="240" height="230" aria-hidden="true"></canvas>Sapinha Olivia</button><button class="character" data-character="rafa" aria-pressed="false"><canvas id="rafa" width="240" height="230" aria-hidden="true"></canvas>Sapo Rafa</button><button class="character" data-character="helena" aria-pressed="false"><canvas id="helena" width="240" height="230" aria-hidden="true"></canvas>Sapo Helena</button></div><div class="setup-nav"><button data-back="0" aria-label="Voltar ao nome">←</button><button id="dress" class="setup-next" aria-label="Escolher roupas">▶</button></div></div><div id="setup-2" class="setup-panel" hidden><h2>Vista seu sapinho</h2><canvas id="dress-preview" width="420" height="340" aria-label="Prévia da roupa escolhida"></canvas><div class="outfits"><button data-slot="hat" aria-label="Trocar chapéu">🎩</button><button data-slot="glasses" aria-label="Trocar óculos">👓</button><button data-slot="top" aria-label="Trocar camiseta ou blusa">👕</button><button data-slot="bottom" aria-label="Trocar shorts ou calça">🩳</button><button data-slot="shoes" aria-label="Trocar tênis">👟</button></div><p id="outfit-label" aria-live="polite">Toque para trocar</p><div class="setup-nav"><button data-back="1" aria-label="Voltar aos personagens">←</button><button id="dress-done" class="setup-next" aria-label="Confirmar roupa">▶</button></div></div><div id="setup-3" class="setup-panel" hidden><h2 id="ready-name"></h2><canvas id="ready-preview" hidden width="420" height="340" aria-label="Seu sapinho pronto para jogar"></canvas><p id="ready-copy"></p><div id="level-list" class="level-list"></div><div class="setup-nav"><button data-back="2" aria-label="Voltar às roupas">←</button><button class="play" hidden id="play" aria-label="Iniciar jogo">▶</button></div></div></div><div class="adult-help"><strong>Para os adultos</strong><button id="rank-open" aria-label="Ver ranking">🏆 Pontuações</button><p class="hint">← → ou A/D: andar · Espaço/W/↑: pular<br>N: dia/noite · C: chuva · X: coaxar · M: som<br>No celular: segure uma seta e toque no pulo com outro dedo.<br>O superpoder dispara sozinho. Ande até a chegada e explore todas as fases!</p></div></section><section class="overlay" id="ranking" hidden role="dialog" aria-modal="true" aria-labelledby="rank-title"><h1 id="rank-title">🏆 Nosso pódio</h1><p id="rank-status"></p><ol id="rank-list"></ol><button id="rank-more" aria-expanded="false">Ver todas as pontuações</button><p class="hint">Salvo neste aparelho.</p><button id="rank-close" aria-label="Voltar">✓</button></section><section class="overlay" id="end" hidden><h1 id="end-title">★ ★ ★</h1><h2 style="color:#c94389;margin:0">Parabéns! Que aventura!</h2><p id="result"></p><button class="play" id="next" aria-label="Próxima fase">▶</button><button class="play" id="again" aria-label="Jogar esta fase novamente">↻</button><button id="rank-end" aria-label="Ver ranking">🏆</button><button id="choose" aria-label="Escolher outra fase">🗺 Fases</button></section>
-<button id="exit-level" hidden>🗺 Sair da fase</button><div id="weather" hidden><button id="night" aria-pressed="false" aria-label="Dia ou noite · N" title="Dia ou noite · N">☀</button><button id="rain" aria-pressed="false" aria-label="Chuva · C" title="Chuva · C">☂</button><button id="mute" aria-pressed="false" aria-label="Som · M" title="Som · M">♫</button></div><div id="controls" hidden><div class="group"><button id="left" aria-label="Andar para a esquerda">◀</button><button id="right" aria-label="Andar para a direita">▶</button></div><div class="group"><button id="jump" aria-label="Pular · Espaço" title="Pular · Espaço">↑</button><button id="sound" aria-label="Coaxar · X" title="Coaxar · X">♪</button><button id="special" disabled>Especial Z</button></div></div><p id="announce" class="sr" aria-live="polite"></p>
+<canvas id="game" aria-label="Caminho do Sapinho Comilão. Use as setas para andar e espaço para pular. Na Marginal, use setas ou WASD para pular nas quatro direções. X para coaxar. O superpoder é automático."></canvas>
+<section class="overlay" id="start"><h1>O Sapinho Comilão</h1><nav class="steps" aria-label="Etapas de preparação"><span data-step="0">✎</span><span data-step="1">🐸</span><span data-step="2">👕</span><span data-step="3">🗺</span></nav><div class="setup-card"><div id="setup-0" class="setup-panel"><h2>Como você se chama?</h2><form id="name-form"><label class="sr" for="player-name">Nome do jogador</label><input id="player-name" type="text" maxlength="24" autocomplete="nickname" placeholder="Seu nome ou apelido" enterkeyhint="next" required><button type="submit" class="setup-next" aria-label="Escolher sapinho">▶</button></form><p id="name-error" aria-live="polite"></p></div><div id="setup-1" class="setup-panel" hidden><h2>Escolha seu sapinho</h2><div class="characters"><button class="character" data-character="dudu" aria-pressed="true"><canvas id="dudu" width="240" height="230" aria-hidden="true"></canvas>Sapo Dudu</button><button class="character" data-character="carol" aria-pressed="false"><canvas id="carol" width="240" height="230" aria-hidden="true"></canvas>Sapo Carol</button><button class="character" data-character="joca" aria-pressed="false"><canvas id="joca" width="240" height="230" aria-hidden="true"></canvas>Sapo Joca</button><button class="character" data-character="olivia" aria-pressed="false"><canvas id="olivia" width="240" height="230" aria-hidden="true"></canvas>Sapinha Olivia</button><button class="character" data-character="rafa" aria-pressed="false"><canvas id="rafa" width="240" height="230" aria-hidden="true"></canvas>Sapo Rafa</button><button class="character" data-character="helena" aria-pressed="false"><canvas id="helena" width="240" height="230" aria-hidden="true"></canvas>Sapo Helena</button></div><div class="setup-nav"><button data-back="0" aria-label="Voltar ao nome">←</button><button id="dress" class="setup-next" aria-label="Escolher roupas">▶</button></div></div><div id="setup-2" class="setup-panel" hidden><h2>Vista seu sapinho</h2><canvas id="dress-preview" width="420" height="340" aria-label="Prévia da roupa escolhida"></canvas><div class="outfits"><button data-slot="hat" aria-label="Trocar chapéu">🎩</button><button data-slot="glasses" aria-label="Trocar óculos">👓</button><button data-slot="top" aria-label="Trocar camiseta ou blusa">👕</button><button data-slot="bottom" aria-label="Trocar shorts ou calça">🩳</button><button data-slot="shoes" aria-label="Trocar tênis">👟</button></div><p id="outfit-label" aria-live="polite">Toque para trocar</p><div class="setup-nav"><button data-back="1" aria-label="Voltar aos personagens">←</button><button id="dress-done" class="setup-next" aria-label="Confirmar roupa">▶</button></div></div><div id="setup-3" class="setup-panel" hidden><h2 id="ready-name"></h2><canvas id="ready-preview" hidden width="420" height="340" aria-label="Seu sapinho pronto para jogar"></canvas><p id="ready-copy"></p><div id="level-list" class="level-list"></div><div class="setup-nav"><button data-back="2" aria-label="Voltar às roupas">←</button><button class="play" hidden id="play" aria-label="Iniciar jogo">▶</button></div></div></div><div class="adult-help"><strong>Para os adultos</strong><button id="rank-open" aria-label="Ver ranking">🏆 Pontuações</button><p class="hint">← → ou A/D: andar · Espaço/W/↑: pular<br>N: dia/noite · C: chuva · X: coaxar · M: som<br>No celular: segure uma seta e toque no pulo com outro dedo.<br>O superpoder dispara sozinho. Ande até a chegada e explore todas as fases!<br>Na Marginal: setas ou WASD dão pulinhos nas quatro direções.</p></div></section><section class="overlay" id="ranking" hidden role="dialog" aria-modal="true" aria-labelledby="rank-title"><h1 id="rank-title">🏆 Nosso pódio</h1><p id="rank-status"></p><ol id="rank-list"></ol><button id="rank-more" aria-expanded="false">Ver todas as pontuações</button><p class="hint">Salvo neste aparelho.</p><button id="rank-close" aria-label="Voltar">✓</button></section><section class="overlay" id="end" hidden><h1 id="end-title">★ ★ ★</h1><h2 style="color:#c94389;margin:0">Parabéns! Que aventura!</h2><p id="result"></p><button class="play" id="next" aria-label="Próxima fase">▶</button><button class="play" id="again" aria-label="Jogar esta fase novamente">↻</button><button id="rank-end" aria-label="Ver ranking">🏆</button><button id="choose" aria-label="Escolher outra fase">🗺 Fases</button></section>
+<button id="exit-level" hidden>🗺 Sair da fase</button><div id="weather" hidden><button id="night" aria-pressed="false" aria-label="Dia ou noite · N" title="Dia ou noite · N">☀</button><button id="rain" aria-pressed="false" aria-label="Chuva · C" title="Chuva · C">☂</button><button id="mute" aria-pressed="false" aria-label="Som · M" title="Som · M">♫</button></div><div id="controls" hidden><div class="group"><button id="left" aria-label="Andar para a esquerda">◀</button><button id="right" aria-label="Andar para a direita">▶</button></div><div class="group"><button id="jump" aria-label="Pular · Espaço" title="Pular · Espaço">↑</button><button id="sound" aria-label="Coaxar · X" title="Coaxar · X">♪</button><button id="special" disabled>Especial Z</button></div></div><div id="road-controls" hidden aria-label="Pulos na Marginal"><button id="road-up" aria-label="Pular para frente">↑</button><button id="road-left" aria-label="Pular para a esquerda">←</button><button id="road-down" aria-label="Pular para trás">↓</button><button id="road-right" aria-label="Pular para a direita">→</button></div><p id="announce" class="sr" aria-live="polite"></p>
 <script>
 'use strict';
 (()=>{
@@ -33,12 +37,16 @@ rafa:{name:'Rafa',skin:'#88c96a',feet:'#4d9950',belly:'#f4dda0',iris:'#4bace1'},
 helena:{name:'Helena',skin:'#b29be0',feet:'#8271b9',belly:'#eee1b7',iris:'#8051b5'}
 };
 const characterIds=Object.keys(characters);
+let uiScale=1,shortViewport=false;
 let W=1000,H=650,ground=500,character='dudu',state='start',camera=0,score=0,caught=0,energy=0,specialTime=0,clock=0,last=null,nextSpawn=0,audio=null,croakTime=0;
-const levels=[{name:'Mosquinhas',color:'#a4e2ff',ground:'#89dd66',food:'fly'},{name:'Mosquitos',color:'#b5eddf',ground:'#78cf91',food:'mosquito'},{name:'Grilos',color:'#f9e5a6',ground:'#a5cd5e',food:'cricket'},{name:'Mariposas',color:'#d5c6ef',ground:'#8ab394',food:'moth'},{name:'Besourinhos',color:'#bce8f2',ground:'#6bc4a0',food:'beetle'},{name:'Minhoquinhas',color:'#f8d6ba',ground:'#9aca71',food:'worm'},{name:'Fundo da Lagoa',color:'#137e98',ground:'#e4d2a0',food:'shrimp'},{name:'Travessia da Lagoa',color:'#bdebdc',ground:'#70bd77',food:'fly',crossing:true}];
+const levels=[{name:'Mosquinhas',color:'#a4e2ff',ground:'#89dd66',food:'fly'},{name:'Mosquitos',color:'#b5eddf',ground:'#78cf91',food:'mosquito'},{name:'Grilos',color:'#f9e5a6',ground:'#a5cd5e',food:'cricket'},{name:'Mariposas',color:'#d5c6ef',ground:'#8ab394',food:'moth'},{name:'Besourinhos',color:'#bce8f2',ground:'#6bc4a0',food:'beetle'},{name:'Minhoquinhas',color:'#f8d6ba',ground:'#9aca71',food:'worm'},{name:'Fundo da Lagoa',color:'#137e98',ground:'#e4d2a0',food:'shrimp'},{name:'Travessia da Lagoa',color:'#bdebdc',ground:'#70bd77',food:'fly',crossing:true},{name:'Travessia da Marginal',food:'fly',road:true}];
 const START_X=160, WALK_SPEED=200, FINISH_X=START_X+WALK_SPEED*30;
 const POND_BANK=9200,POND_FINISH=POND_BANK+140;
 let pondPlatforms=[],pondSupport=null,pondCheckpoint=null,pondCoyote=0,pondJumpBuffer=0,pondSplash=0,pondHint='',pondHintTime=0;
 const isCrossing=()=>Boolean(levels[level].crossing);
+const isRoad=()=>Boolean(levels[level].road);
+const ROAD_WIDTH=600,ROAD_STEP=60,ROAD_ROW=72;
+let road=null;
 const finishX=()=>isCrossing()?POND_FINISH:FINISH_X;
 let playerName='',setupStep=0;
 let level=0,totalScore=0,totalCaught=0,walkCycle=0,moving=false,runSaved=false,rankReturn=null;
@@ -63,7 +71,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill()}
 function path(c,pts,color,width){c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke()}
 function text(s,x,y,size,color='#244936',align='center'){ctx.font=`bold ${size}px "Comic Sans MS",Arial,sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(s,x,y)}
-function resize(){const r=canvas.getBoundingClientRect(),scale=Math.max(600/r.width,470/r.height);W=r.width*scale;H=r.height*scale;ground=H-(isCrossing()?Math.max(150,130*scale):Math.max(130,100*scale));$('weather').style.top=(108*r.height/H)+'px';$('exit-level').style.top=(108*r.height/H)+'px';const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(canvas.width/W,0,0,canvas.height/H,0,0);camera=Math.max(0,frog.x-W*.3)}
+function resize(){const r=canvas.getBoundingClientRect(),scale=Math.max(600/r.width,(isRoad()?760:470)/r.height);uiScale=scale;shortViewport=r.height<=600;W=r.width*scale;H=r.height*scale;ground=H-(isCrossing()?Math.max(150,130*scale):Math.max(130,100*scale));$('weather').style.top=(108*r.height/H)+'px';$('exit-level').style.top=(108*r.height/H)+'px';const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(canvas.width/W,0,0,canvas.height/H,0,0);camera=Math.max(0,frog.x-W*.3)}
 function drawRafaCurls(c,front){
 // Two layers frame the frog's eyes with Dennis-inspired, fluffy ginger curls.
 const curls=front?[[-35,-91,10],[-19,-95,11],[-1,-92,10],[17,-96,11],[34,-91,10]]:[[-49,-77,13],[-47,-96,15],[-34,-112,16],[-15,-118,15],[6,-117,17],[27,-111,17],[44,-97,16],[50,-78,13]];
@@ -130,16 +138,172 @@ function toggleNight(){night=!night;$('night').textContent=night?'☾':'☀';$('
 function toggleRain(){raining=!raining;$('rain').textContent=raining?'☔':'☂';$('rain').setAttribute('aria-pressed',String(raining));syncRain()}
 function toggleMute(){muted=!muted;$('mute').textContent=muted?'♪ ×':'♫';$('mute').setAttribute('aria-pressed',String(muted));syncRain()}
 function ribbit(){if(state!=='playing')return;croakTime=.45;if(muted)return;try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume().catch(()=>{});const now=audio.currentTime;for(let i=0;i<2;i++){const o=audio.createOscillator(),g=audio.createGain(),f=audio.createBiquadFilter();o.type='sawtooth';o.frequency.setValueAtTime(180-i*25,now+i*.14);o.frequency.exponentialRampToValueAtTime(65,now+i*.14+.16);f.type='lowpass';f.frequency.value=650;g.gain.setValueAtTime(0,now+i*.14);g.gain.linearRampToValueAtTime(.1,now+i*.14+.015);g.gain.exponentialRampToValueAtTime(.001,now+i*.14+.19);o.connect(f);f.connect(g);g.connect(audio.destination);o.start(now+i*.14);o.stop(now+i*.14+.2);o.onended=()=>{o.disconnect();f.disconnect();g.disconnect()}}}catch{ /* The game remains playable if audio is unavailable. */ }}
-function jump(){if(state!=='playing')return;if(isCrossing()){if(!pondSplash)pondJumpBuffer=.16}else if(frog.y===0)frog.vy=575}
-function activate(){if(state==='playing'&&energy>=100&&specialTime<=0){energy=0;specialTime=7;$('announce').textContent=isCrossing()?'Super! A bolha protege da água e atrai mosquinhas!':'Língua Magnética Suprema ativada!';ribbit()}}
+function jump(){if(state!=='playing')return;if(isRoad()){roadHop(0,1);return}if(isCrossing()){if(!pondSplash)pondJumpBuffer=.16}else if(frog.y===0)frog.vy=575}
+function activate(){if(state==='playing'&&energy>=100&&specialTime<=0){energy=0;specialTime=7;$('announce').textContent=isRoad()?'Super! O trânsito ficou mais lento por sete segundos!':isCrossing()?'Super! A bolha protege da água e atrai mosquinhas!':'Língua Magnética Suprema ativada!';ribbit()}}
 function spawn(){const base=camera+W+70;const gold=Math.random()<.2;flies.push({x:base,y:ground-(45+Math.random()*115),base:45+Math.random()*115,phase:Math.random()*6.28,gold});}
-function start(){state='playing';walkCycle=0;moving=false;frog={x:160,y:0,vy:0,facing:1};camera=score=caught=energy=clock=specialTime=nextSpawn=0;flies=[];particles=[];labels=[];keys.clear();touches.clear();last=null;resize();if(isCrossing())startPond();else for(let i=0;i<7;i++)flies.push({x:300+i*160,y:0,base:i%3===0?145:45+Math.random()*40,phase:i,gold:i===4});$('start').hidden=true;$('end').hidden=true;$('exit-level').hidden=false;$('controls').hidden=false;$('weather').hidden=false;syncRain();try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume().catch(()=>{})}catch{}}
-function finish(){totalScore=score;totalCaught=caught;state='end';saveRank();syncRain();$('weather').hidden=true;$('exit-level').hidden=true;keys.clear();touches.clear();$('controls').hidden=true;$('end').hidden=false;$('result').textContent=`★ ${score} ★`;$('end-title').textContent='🏁 '+levels[level].name;$('next').hidden=level===levels.length-1;$('again').hidden=false;$('announce').textContent='Você chegou! Parabéns!';$('again').focus()}
-function chooseLevel(){state='start';clear();syncRain();$('end').hidden=true;$('controls').hidden=true;$('weather').hidden=true;$('exit-level').hidden=true;$('start').hidden=false;showSetup(3)}
-const levelIcons=['🌼','🌾','🌻','🌙','🍄','🥕','🫧','🪷'];
-levels.forEach((item,index)=>{const button=document.createElement('button');const icon=document.createElement('span');icon.className='level-icon';icon.textContent=levelIcons[index];icon.setAttribute('aria-hidden','true');button.append(icon,document.createTextNode(item.name));button.onclick=()=>{level=index;restart()};$('level-list').append(button)});
+function start(){state='playing';walkCycle=0;moving=false;frog={x:160,y:0,vy:0,facing:1};camera=score=caught=energy=clock=specialTime=nextSpawn=0;flies=[];particles=[];labels=[];keys.clear();touches.clear();last=null;resize();if(isRoad())startRoad();else if(isCrossing())startPond();else for(let i=0;i<7;i++)flies.push({x:300+i*160,y:0,base:i%3===0?145:45+Math.random()*40,phase:i,gold:i===4});$('start').hidden=true;$('end').hidden=true;$('exit-level').hidden=false;$('controls').hidden=isRoad();$('road-controls').hidden=!isRoad();$('weather').hidden=false;syncRain();try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume().catch(()=>{})}catch{}}
+function finish(){totalScore=score;totalCaught=caught;state='end';saveRank();syncRain();$('weather').hidden=true;$('exit-level').hidden=true;keys.clear();touches.clear();$('controls').hidden=true;$('road-controls').hidden=true;$('end').hidden=false;$('result').textContent=`★ ${score} ★`;$('end-title').textContent='🏁 '+levels[level].name;$('next').hidden=level===levels.length-1;$('again').hidden=false;$('announce').textContent='Você chegou! Parabéns!';$('again').focus()}
+function chooseLevel(){state='start';clear();syncRain();$('end').hidden=true;$('controls').hidden=true;$('road-controls').hidden=true;$('weather').hidden=true;$('exit-level').hidden=true;$('start').hidden=false;showSetup(3)}
+function levelIcon(item){
+const shapes={
+fly:'<ellipse cx="20" cy="23" rx="12" ry="8" fill="#e9faff"/><ellipse cx="43" cy="23" rx="12" ry="8" fill="#e9faff"/><ellipse cx="32" cy="36" rx="10" ry="16" fill="#596879"/><circle cx="28" cy="25" r="4" fill="white"/><circle cx="36" cy="25" r="4" fill="white"/>',
+mosquito:'<path d="M29 35 13 44M34 35 50 44M28 41 20 55M35 41 44 55M33 22 47 9"/><ellipse cx="19" cy="29" rx="12" ry="5" fill="#e0f7ff" transform="rotate(-25 19 29)"/><ellipse cx="44" cy="29" rx="12" ry="5" fill="#e0f7ff" transform="rotate(25 44 29)"/><ellipse cx="32" cy="34" rx="4" ry="16" fill="#68768b"/>',
+cricket:'<path d="M24 34 11 22 7 48M37 34 50 22 57 48M27 18 19 8M36 18 43 8"/><ellipse cx="31" cy="35" rx="12" ry="19" fill="#79b848"/><circle cx="32" cy="20" r="10" fill="#9fd16b"/><circle cx="36" cy="18" r="2" fill="#244936"/>',
+moth:'<path d="M29 21 24 12M35 21 41 12"/><path d="M31 31C7 1 2 43 23 39 5 60 31 58 32 39 35 59 59 59 44 39 65 41 54 2 33 31" fill="#bd92cb"/><circle cx="18" cy="29" r="5" fill="#ffe6b0"/><circle cx="46" cy="29" r="5" fill="#ffe6b0"/><ellipse cx="32" cy="35" rx="4" ry="17" fill="#685478"/>',
+beetle:'<path d="M22 28 12 21M21 36 10 36M22 44 13 51M42 28 52 21M43 36 54 36M42 44 51 51"/><ellipse cx="32" cy="37" rx="16" ry="19" fill="#e8a14c"/><circle cx="32" cy="19" r="8" fill="#526b50"/><path d="M32 25V54"/><circle cx="25" cy="34" r="3" fill="#765c37"/><circle cx="40" cy="43" r="3" fill="#765c37"/>',
+worm:'<path d="M10 43Q17 26 27 41T46 32Q46 21 53 22" stroke="#a85377" stroke-width="13"/><path d="M10 40Q17 23 27 38T46 29Q46 18 53 19" stroke="#eda2b2" stroke-width="10"/><path d="m17 32 2 7m9-1 0 7m10-9 4 4m2-15 5 1" stroke="#c97895"/><circle cx="54" cy="17" r="2" fill="#344b43"/>',
+shrimp:'<path d="M43 26Q18 12 15 32T35 49" stroke="#ec9b90" stroke-width="12"/><path d="m18 27 9 5m-10 4 10 3m-6 6 8 1m12-20 7-12 9-3M42 29l12-5" stroke="#ae6864"/><path d="m32 46 9-7 1 17Z" fill="#f4b5a3"/><circle cx="41" cy="23" r="2" fill="#34515f"/>',
+pond:'<ellipse cx="32" cy="43" rx="27" ry="12" fill="#76c7ce" stroke="none"/><path d="M53 37C48 21 7 22 9 39S49 53 55 40L33 37Z" fill="#85bd64"/><path d="M30 34Q16 11 29 16Q39 5 40 24Q56 14 45 34Z" fill="#efacc6" stroke="#cf7ea1"/><circle cx="35" cy="29" r="5" fill="#ffe399"/>',
+road:'<path d="M14 58 22 8H42L52 58Z" fill="#596774" stroke="none"/><path d="M32 13v8m0 8v8m0 8v8" stroke="#fff3c9"/><rect x="14" y="28" width="15" height="22" rx="4" fill="#e79a65"/><rect x="17" y="32" width="9" height="7" fill="#d6f2f7"/><path d="M6 25 20 8 34 25M20 8v21M43 9v14m-5-14h10" stroke="#8fa6ad"/>'
+};
+return '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="#f6f4dc"/><g stroke="#47645a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">'+shapes[item.road?'road':item.crossing?'pond':item.food]+'</g></svg>';
+}
+levels.forEach((item,index)=>{const button=document.createElement('button');const icon=document.createElement('span');icon.className='level-icon';icon.innerHTML=levelIcon(item);icon.setAttribute('aria-hidden','true');button.append(icon,document.createTextNode(item.name));button.onclick=()=>{level=index;restart()};$('level-list').append(button)});
 $('exit-level').onclick=chooseLevel;
-function collect(f){captureSound(f.gold);caught++;const value=f.gold?50:10;score+=value;energy=Math.min(100,energy+(f.gold?20:5));labels.push({x:f.x,y:f.y,text:'+'+value,life:.8});for(let i=0;i<16;i++){const a=Math.random()*Math.PI*2,s=60+Math.random()*170;particles.push({x:f.x,y:f.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6+Math.random()*.25,color:specialTime>0?palette[i%5]:'#ffe34e'})}}
+function collect(f){captureSound(f.gold);caught++;const value=f.gold?50:10;score+=value;energy=Math.min(100,energy+(isRoad()?25:f.gold?20:5));labels.push({x:f.x,y:f.y,text:'+'+value,life:.8});for(let i=0;i<16;i++){const a=Math.random()*Math.PI*2,s=60+Math.random()*170;particles.push({x:f.x,y:f.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6+Math.random()*.25,color:specialTime>0?palette[i%5]:'#ffe34e'})}}
+// Marginal Pinheiros: a fictional crossing inspired by the Ponte Estaiada area.
+// Its own world coordinates keep traffic and hops independent of screen size.
+function startRoad(){
+road={rows:[{safe:true,section:0}],cars:[],foods:[],x:300,y:0,col:4,row:0,checkpoint:{col:4,row:0},move:null,queued:null,recovery:0,camera:0,heading:0,notice:'Cada toque dá um pulinho. Espere uma brecha!',noticeTime:6};
+const counts=[2,2,3,3,3,3];
+for(let section=0;section<counts.length;section++){
+for(let lane=0;lane<counts[section];lane++){
+const row=road.rows.length,dir=section%2?-1:1,period=section<2?980:900;
+road.rows.push({safe:false,section,dir});
+for(let i=0;i<2;i++)road.cars.push({row,x:((i*period/2+lane*175+section*80)%period)-170,width:section>=2&&i===1?112:68,speed:65+section*11+lane*8,dir,period,color:['#c3cbd0','#587b94','#ba675b','#d3aa63'][(section+lane+i)%4]});
+}
+const row=road.rows.length;road.rows.push({safe:true,section:section+1});
+if(section<counts.length-1)for(const col of [4,section%2?2:6])road.foods.push({row,col,gold:col!==4,taken:false});
+}
+road.rows[road.rows.length-1].finish=true;
+camera=0;roadMessage(road.notice);
+}
+function roadMessage(message){road.notice=message;road.noticeTime=4;$('announce').textContent=message}
+function roadHop(dx,dy){
+if(state!=='playing'||!isRoad()||!road||road.recovery>0)return;
+if(road.move){road.queued={dx,dy};return}
+const col=clamp(road.col+dx,0,8),row=clamp(road.row+dy,0,road.rows.length-1);
+if(col===road.col&&row===road.row)return;
+if(!road.rows[row].safe)road.noticeTime=0;
+road.heading=dx?dx*Math.PI/2:dy>0?0:Math.PI;
+road.move={fromX:road.x,fromY:road.y,toX:60+col*ROAD_STEP,toY:row*ROAD_ROW,col,row,elapsed:0,duration:.32};
+}
+function roadKey(e){
+const direction={ArrowUp:[0,1],KeyW:[0,1],Space:[0,1],ArrowDown:[0,-1],KeyS:[0,-1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[e.code];
+if(!direction)return false;e.preventDefault();if(!e.repeat)roadHop(...direction);return true;
+}
+for(const [id,dx,dy] of [['road-up',0,1],['road-down',0,-1],['road-left',-1,0],['road-right',1,0]]){
+const button=$(id);
+button.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();roadHop(dx,dy)});
+button.addEventListener('click',e=>{if(e.detail===0)roadHop(dx,dy)});
+}
+function roadView(){const bottom=H-((shortViewport?65:135)*uiScale+85),top=Math.max(270,108+96*uiScale,bottom-610);return {left:(W-ROAD_WIDTH)/2,top,bottom}}
+function roadScreenY(y){return roadView().bottom-40-y+road.camera}
+function roadCollision(){
+road.recovery=.85;road.move=road.queued=null;keys.clear();touches.clear();
+roadMessage('Opa! De volta ao canteiro, sem perder pontos.');
+}
+function updateRoad(dt){
+road.noticeTime=Math.max(0,road.noticeTime-dt);
+const trafficScale=specialTime>0?.32:1;
+for(const car of road.cars){car.x+=car.dir*car.speed*trafficScale*dt;while(car.x>car.period-170)car.x-=car.period;while(car.x< -170)car.x+=car.period}
+if(road.recovery>0){
+road.recovery=Math.max(0,road.recovery-dt);
+if(!road.recovery){road.col=road.checkpoint.col;road.row=road.checkpoint.row;road.x=60+road.col*ROAD_STEP;road.y=road.row*ROAD_ROW;road.camera=Math.max(0,road.y-ROAD_ROW);roadMessage('Pode tentar de novo! Espere os carros passarem.')}
+}else{
+if(road.move){const m=road.move;m.elapsed=Math.min(m.duration,m.elapsed+dt);const t=m.elapsed/m.duration;road.x=m.fromX+(m.toX-m.fromX)*t;road.y=m.fromY+(m.toY-m.fromY)*t}
+// Airborne animation does not allow jumping over vehicles. Test at every physics step.
+for(const car of road.cars){if(Math.abs(road.y-car.row*ROAD_ROW)<34&&Math.abs(road.x-car.x)<car.width/2+14){roadCollision();break}}
+if(!road.recovery&&road.move&&road.move.elapsed>=road.move.duration){
+road.col=road.move.col;road.row=road.move.row;road.move=null;
+if(road.rows[road.row].safe){road.checkpoint={row:road.row,col:road.col};roadMessage(road.rows[road.row].finish?'Você atravessou!':'Canteiro seguro! Pegue as mosquinhas e observe o trânsito.')}
+if(road.rows[road.row].finish){finish();return}
+}
+if(!road.recovery&&!road.move){
+for(const food of road.foods){if(!food.taken&&food.row===road.row&&food.col===road.col){food.taken=true;collect({x:roadView().left+road.x,y:roadScreenY(road.y),gold:food.gold})}}
+if(road.queued){const next=road.queued;road.queued=null;roadHop(next.dx,next.dy)}
+}
+}
+road.camera+=(Math.max(0,road.y-ROAD_ROW)-road.camera)*Math.min(1,dt*9);
+for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=220*dt;if(p.life<=0)particles.splice(i,1)}
+for(let i=labels.length-1;i>=0;i--){labels[i].life-=dt;labels[i].y-=45*dt;if(labels[i].life<=0)labels.splice(i,1)}
+if(energy===100&&specialTime<=0)activate();
+}
+function roadBackdrop(view){
+const sky=ctx.createLinearGradient(0,100,0,view.top);sky.addColorStop(0,night?'#18283b':raining?'#9aafb5':'#b5ccd4');sky.addColorStop(1,night?'#496272':'#e3ddd0');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+const skylineY=view.top-28;
+for(let i=0;i<Math.ceil(W/64)+1;i++){
+const x=i*64,h=35+(i*37)%85;ctx.fillStyle=night?'#33434e':['#8b9ba3','#a7b3b6','#738b97'][i%3];ctx.fillRect(x,skylineY-h,49,h);
+ctx.fillStyle=night?'#d6bd7e':'#c2d7da';for(let wx=7;wx<43;wx+=10)for(let wy=8;wy<h-3;wy+=14)ctx.fillRect(x+wx,skylineY-h+wy,4,7);
+path(ctx,[[x+49,skylineY-h],[x+49,skylineY]],'#647d88',2);
+}
+// Pinheiros river, embankments and cycleway beside the road board.
+ctx.fillStyle=night?'#344f53':'#647f7a';ctx.fillRect(0,skylineY,W,H-skylineY);
+for(let i=0;i<35;i++){const y=skylineY+15+i*24,x=(i*119+clock*4)%W;path(ctx,[[x,y],[x+45,y]],night?'#4e696b':'#8da49a',1)}
+ctx.fillStyle='#697f64';ctx.fillRect(view.left-45,view.top-6,ROAD_WIDTH+90,view.bottom-view.top+25);
+ctx.fillStyle='#ac6d59';ctx.fillRect(view.left-33,view.top-6,11,view.bottom-view.top+25);
+path(ctx,[[view.left-28,view.top],[view.left-28,view.bottom]],'#e6d3b2',1);
+// Recognizable X pylon and cable fan, inspired by the Ponte Estaiada (not a street map).
+const bx=W*.66,by=skylineY+3,bh=Math.min(116,Math.max(72,view.top-130));
+path(ctx,[[bx-130,by+3],[bx+125,by-5]],'#647783',13);path(ctx,[[bx-130,by],[bx+125,by-8]],'#c7c6b7',6);
+for(let i=-5;i<=5;i++){path(ctx,[[bx-14,by-bh],[bx+i*24,by-1]],night?'#c7bb88':'#ded3a4',1.5);path(ctx,[[bx+13,by-bh],[bx+i*24,by-7]],'#aaa894',1)}
+path(ctx,[[bx-29,by+8],[bx+20,by-bh]],'#d1d0bf',8);path(ctx,[[bx+30,by+8],[bx-20,by-bh]],'#f0ebd7',8);
+const signY=108+60*uiScale;ctx.fillStyle='#285c50';ctx.fillRect(24,signY,220*uiScale,28*uiScale);text('Ponte Estaiada · São Paulo',24+110*uiScale,signY+14*uiScale,13*uiScale,'#fff7db');
+}
+function drawRoadCar(car,view){
+const x=view.left+car.x,y=roadScreenY(car.row*ROAD_ROW),bus=car.width>80;
+ctx.save();ctx.translate(x,y);ctx.scale(car.dir,1);
+ctx.fillStyle='#202c33';ctx.fillRect(-car.width/2+3,-23,car.width,49);
+for(const wx of [-car.width/2+14,car.width/2-14]){ctx.fillStyle='#20272a';ctx.fillRect(wx-5,-25,10,8);ctx.fillRect(wx-5,17,10,8)}
+ctx.fillStyle=bus?'#c9c9be':car.color;ctx.fillRect(-car.width/2,-21,car.width,42);
+ctx.fillStyle=bus?'#a74939':'#d4e3e6';ctx.fillRect(-car.width/2+5,-19,car.width-10,4);
+ctx.fillStyle='#284652';ctx.fillRect(car.width/2-18,-17,11,34);ctx.fillRect(-car.width/2+8,-15,9,30);
+ctx.fillStyle=night?'#647e89':'#a3c1cd';ctx.fillRect(car.width/2-16,-14,5,25);
+ctx.fillStyle=bus?'#efeee2':car.color;ctx.fillRect(-car.width/2+22,-15,car.width-44,30);
+if(bus){ctx.fillStyle='#798d92';ctx.fillRect(-18,-9,20,18);ctx.fillRect(9,-9,15,18);for(let i=-38;i<35;i+=16){ctx.fillStyle='#384f58';ctx.fillRect(i,15,12,4)}}
+else{path(ctx,[[-8,-12],[7,-12]],'#c7d6db',1);path(ctx,[[-8,12],[7,12]],'#596b76',1)}
+for(const lightY of [-15,11]){ctx.fillStyle=night?'#fff2a8':'#e5e5cf';ctx.fillRect(car.width/2-3,lightY,4,5);ctx.fillStyle='#b83c37';ctx.fillRect(-car.width/2-1,lightY,3,5)}
+if(night){ctx.globalAlpha=.12;ctx.fillStyle='#fff3b5';ctx.beginPath();ctx.moveTo(car.width/2,-16);ctx.lineTo(car.width/2+55,-32);ctx.lineTo(car.width/2+55,32);ctx.lineTo(car.width/2,16);ctx.fill()}
+ctx.restore();
+}
+function drawRoad(){
+const view=roadView();roadBackdrop(view);if(state!=='playing'||!road)return;
+ctx.save();ctx.beginPath();ctx.rect(view.left-12,view.top,ROAD_WIDTH+24,view.bottom-view.top);ctx.clip();
+ctx.fillStyle='#b8b6a3';ctx.fillRect(view.left-10,view.top,ROAD_WIDTH+20,view.bottom-view.top);
+for(let row=0;row<road.rows.length;row++){
+const info=road.rows[row],y=roadScreenY(row*ROAD_ROW);if(y<view.top-ROAD_ROW||y>view.bottom+ROAD_ROW)continue;
+ctx.fillStyle=info.safe?(night?'#45634d':'#8fa976'):(night?'#313e48':'#505b62');ctx.fillRect(view.left,y-36,ROAD_WIDTH,72);
+if(info.safe){
+ctx.fillStyle=night?'#8b9586':'#c6c8ae';ctx.fillRect(view.left,y-23,ROAD_WIDTH,46);
+for(let x=0;x<ROAD_WIDTH;x+=30)path(ctx,[[view.left+x,y-22],[view.left+x,y+22]],night?'#707e72':'#a9af99',1);
+for(const x of [view.left+16,view.left+ROAD_WIDTH-16]){ellipse(ctx,x,y,18,17,'#456d50');ellipse(ctx,x-3,y-3,12,12,night?'#5e8059':'#739561')}
+path(ctx,[[view.left,y-34],[view.left+ROAD_WIDTH,y-34]],'#d9d7c5',3);path(ctx,[[view.left,y+34],[view.left+ROAD_WIDTH,y+34]],'#d9d7c5',3);
+if(row===0||info.finish){for(let x=220;x<390;x+=20){ctx.fillStyle=(x/20)%2?'#f6f1d9':'#435059';ctx.fillRect(view.left+x,y-31,20,8)}text(info.finish?'CHEGADA':'LARGADA',view.left+300,y+24,12,'#284f44')}
+}else{
+for(let x=0;x<ROAD_WIDTH;x+=75)path(ctx,[[view.left+x,y-35],[view.left+x+36,y-35]],'#c9c9b9',2);
+ctx.save();ctx.translate(view.left+37,y);ctx.scale(info.dir,1);path(ctx,[[-11,0],[11,0],[4,-6]],'#a9b1ae',2);path(ctx,[[11,0],[4,6]],'#a9b1ae',2);ctx.restore();
+for(let i=0;i<12;i++)ellipse(ctx,view.left+(i*53+row*17)%600,y-25+(i*13)%50,1,.7,'#717b7d');
+}
+}
+for(const car of road.cars){const y=roadScreenY(car.row*ROAD_ROW);if(y>view.top-40&&y<view.bottom+40&&car.x> -120&&car.x<720)drawRoadCar(car,view)}
+for(const food of road.foods){if(food.taken)continue;const y=roadScreenY(food.row*ROAD_ROW);if(y>view.top-25&&y<view.bottom+25)drawFly({x:view.left+60+food.col*ROAD_STEP,y:y-2,gold:food.gold,phase:food.col})}
+const hop=road.move?Math.sin(road.move.elapsed/road.move.duration*Math.PI)*14:0;
+if(!road.recovery||Math.floor(road.recovery*14)%2===0){
+const x=view.left+road.x,y=roadScreenY(road.y);ellipse(ctx,x,y+12,23,10,'#344b4566');
+ctx.save();ctx.translate(x,y-hop);ctx.rotate(road.heading);drawFrog(ctx,0,24,character,.46,1,specialTime>0,false);ctx.restore();
+}
+if(raining){ctx.save();ctx.globalAlpha=.3;for(let i=0;i<90;i++){const x=view.left+(i*53+clock*24)%600,y=view.top+(i*71+clock*280)%(view.bottom-view.top);path(ctx,[[x,y],[x-4,y+13]],'#d2e4e9',1)}ctx.restore()}
+ctx.restore();particles.forEach(star);labels.forEach(l=>text(l.text,l.x,l.y,22,'#ad4c60'));
+ctx.fillStyle='#fffce8';ctx.fillRect(12,12,W-24,94);text(`${score} pontos`,28,35,24,'#33593b','left');text(`${level+1} / ${levels.length}`,W-28,35,22,'#33593b','right');
+const progress=clamp(road.y/((road.rows.length-1)*ROAD_ROW),0,1),barW=W-56;ctx.fillStyle='#d9e4d2';ctx.fillRect(28,61,barW,16);ctx.fillStyle='#619c9c';ctx.fillRect(28,61,barW*progress,16);text('Largada',28,92,15,'#33593b','left');text('Chegada',W-28,92,15,'#33593b','right');text('Travessia da Marginal',W/2,92,18);
+let hint=road.noticeTime>0?road.notice:'↑ avance · ← → desvie · ↓ volte. Espere uma brecha!';
+if(specialTime>0&&!road.recovery)hint=`SUPER! Trânsito lento por ${Math.ceil(specialTime)}s`;
+const hintWidth=Math.min(W-32,Math.max(ROAD_WIDTH+16,600*uiScale));
+ctx.fillStyle=specialTime>0?'#ffe694':'#f6f2de';ctx.fillRect((W-hintWidth)/2,view.bottom+10,hintWidth,35);
+ctx.font=`bold ${Math.max(15,12*uiScale)}px "Comic Sans MS",Arial,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#345749';ctx.fillText(hint,W/2,view.bottom+28,hintWidth-18);
+ctx.font=`bold ${Math.max(14,10*uiScale)}px "Comic Sans MS",Arial,sans-serif`;ctx.fillStyle='#f3f2d9';ctx.fillText(specialTime>0?'Mosquinhas ativam o trânsito lento!':`Superpoder: ${energy}% · Pegue mosquinhas nos canteiros`,W/2,view.bottom+63,hintWidth-18);
+}
+
 // The pond uses world-space platforms; height stays relative to ground on resize.
 function pondMessage(message){pondHint=message;pondHintTime=4;$('announce').textContent=message}
 function startPond(){
@@ -188,6 +352,7 @@ if(frog.x>=POND_FINISH&&pondSupport?.kind==='bank')finish();
 }
 function update(dt){
 clock+=dt;specialTime=Math.max(0,specialTime-dt);croakTime=Math.max(0,croakTime-dt);
+if(isRoad()){updateRoad(dt);return}
 let d=Number(keys.has('ArrowRight')||keys.has('KeyD'))-Number(keys.has('ArrowLeft')||keys.has('KeyA'));for(const value of touches.values())d+=value;
 moving=Boolean(d);if(moving)walkCycle+=dt*15;
 if(isCrossing())updatePond(dt,d);else{
@@ -290,7 +455,7 @@ if(raining&&t!=='shrimp'){ctx.fillStyle='#ffdc53';ctx.beginPath();ctx.moveTo(x-7
 if(night)ellipse(ctx,x,y+9,5,4,'#d9ff70');ellipse(ctx,x-3,y-8,2,3,'#fff');ellipse(ctx,x+3,y-8,2,3,'#fff');}
 function drawRain(){if(!raining||levels[level].food==='shrimp')return;ctx.save();ctx.globalAlpha=night?.45:.65;for(let i=0;i<110;i++){const x=((i*97.3-clock*105)%(W+40)+W+40)%(W+40)-20,y=(i*53.7+clock*(380+i%4*35))%(H+30)-20;path(ctx,[[x,y],[x-5,y+16]],night?'#a9c9f4':'#e4f5ff',1.6)}for(let i=0;i<12;i++){const x=(i*179-camera*.7)%W;ellipse(ctx,x,ground+26+(i%3)*13,13+Math.sin(clock*7+i)*4,2,night?'#8ba3c9':'#c9e7ec')}ctx.restore()}
 function star(p){ctx.globalAlpha=Math.min(1,p.life*3);ctx.fillStyle=p.color;ctx.beginPath();for(let i=0;i<10;i++){const a=i*Math.PI/5,r=i%2?4:9,x=p.x-camera+Math.cos(a)*r,y=p.y+Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill();ctx.globalAlpha=1}
-function draw(){scenery();if(state!=='playing')return;routeMarkers();
+function draw(){if(isRoad()){drawRoad();return}scenery();if(state!=='playing')return;routeMarkers();
 if(specialTime>0){for(const f of flies){if(f.magnet){const x=frog.x-camera+8*frog.facing,y=ground-frog.y-43;path(ctx,[[x,y],[(x+f.x-camera)/2,y-30],[f.x-camera,f.y]],'#d7478b',10);path(ctx,[[x,y],[(x+f.x-camera)/2,y-30],[f.x-camera,f.y]],'#ff9fc6',5)}}}
 flies.filter(f=>f.x>camera-50&&f.x<camera+W+50).forEach(drawFly);if(!isCrossing())ellipse(ctx,frog.x-camera,ground+5,42,8,'#329b51');ctx.save();if(pondFalling()){ctx.beginPath();ctx.rect(0,0,W,ground+14);ctx.clip()}drawFrog(ctx,frog.x-camera,ground-frog.y,character,1,frog.facing,specialTime>0,true);ctx.restore();particles.forEach(star);labels.forEach(l=>text(l.text,l.x-camera,l.y,24,'#a94176'));
 if(isCrossing())pondOverlay();
@@ -307,8 +472,8 @@ $('night').onclick=toggleNight;$('rain').onclick=toggleRain;$('mute').onclick=to
 $('jump').addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'&&event.button!==0)return;event.preventDefault();jump()});
 // Keyboard and assistive-technology activation still use click (detail 0).
 $('jump').addEventListener('click',event=>{if(event.detail===0)jump()});$('sound').onclick=ribbit;$('special').onclick=activate;canvas.addEventListener('pointerdown',ribbit);
-window.addEventListener('keydown',e=>{if(state!=='playing')return;if(['ArrowLeft','ArrowRight','ArrowUp','KeyA','KeyD','KeyW','Space','KeyX','KeyZ','KeyN','KeyC','KeyM'].includes(e.code)){e.preventDefault();keys.add(e.code);if(!e.repeat){if(['Space','ArrowUp','KeyW'].includes(e.code))jump();if(e.code==='KeyN')toggleNight();if(e.code==='KeyC')toggleRain();if(e.code==='KeyM')toggleMute();if(e.code==='KeyX')ribbit();if(e.code==='KeyZ')activate()}}});window.addEventListener('keyup',e=>keys.delete(e.code));
-function clear(){moving=false;keys.clear();touches.clear();last=null}window.addEventListener('blur',clear);document.addEventListener('visibilitychange',()=>{clear();syncRain()});window.addEventListener('resize',resize);
+window.addEventListener('keydown',e=>{if(state!=='playing')return;if(isRoad()&&roadKey(e))return;if(['ArrowLeft','ArrowRight','ArrowUp','KeyA','KeyD','KeyW','Space','KeyX','KeyZ','KeyN','KeyC','KeyM'].includes(e.code)){e.preventDefault();keys.add(e.code);if(!e.repeat){if(['Space','ArrowUp','KeyW'].includes(e.code))jump();if(e.code==='KeyN')toggleNight();if(e.code==='KeyC')toggleRain();if(e.code==='KeyM')toggleMute();if(e.code==='KeyX')ribbit();if(e.code==='KeyZ')activate()}}});window.addEventListener('keyup',e=>keys.delete(e.code));
+function clear(){if(road)road.queued=null;moving=false;keys.clear();touches.clear();last=null}window.addEventListener('blur',clear);document.addEventListener('visibilitychange',()=>{clear();syncRain()});window.addEventListener('resize',resize);
 showSetup(0);resize();requestAnimationFrame(frame);
 })();
 </script></body></html>
