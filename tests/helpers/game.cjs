@@ -8,12 +8,14 @@ function game(saved={}){
   const noop=()=>{};
   const context=new Proxy({}, {get:(_,key)=>key==='createLinearGradient'?()=>({addColorStop:noop}):noop,set:()=>true});
   const elements=new Map();
-  const element=()=>({hidden:false,firstElementChild:{focus:noop},style:{},dataset:{},value:'Teste',events:{},classList:{add:noop,remove:noop},getContext:()=>context,getBoundingClientRect:()=>({width:1000,height:650}),addEventListener(type,callback){this.events[type]=callback},setPointerCapture:noop,setAttribute:noop,append:noop,appendChild:noop,replaceChildren:noop,focus:noop});
+  const element=()=>{const item={hidden:false,firstElementChild:{focus:noop},style:{},dataset:{},value:'Teste',events:{},attributes:{},classList:{add:noop,remove:noop},getContext:()=>context,getBoundingClientRect:()=>({width:1000,height:650}),addEventListener(type,callback){this.events[type]=callback},setPointerCapture:noop,append:noop,appendChild:noop,replaceChildren:noop,focus:noop};item.setAttribute=(name,value)=>{item.attributes[name]=value};return item};
   const buttons={};
   for(const key of ['character','slot'])buttons[`[data-${key}]`]=[...html.matchAll(new RegExp(`data-${key}="([^"]+)"`,'g'))].map(match=>{
     const button=element();button.dataset[key]=match[1];button.attributes={};button.setAttribute=(name,value)=>{button.attributes[name]=value};return button;
   });
-  const document={hidden:false,getElementById:id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id)},querySelectorAll:selector=>buttons[selector]||[],createElement:element,createTextNode:x=>x,addEventListener:noop};
+  const characterMenu=element();
+  characterMenu.append=(...children)=>children.filter(child=>child.dataset?.character).forEach(child=>buttons['[data-character]'].push(child));
+  const document={hidden:false,getElementById:id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id)},querySelector:selector=>selector==='.characters'?characterMenu:null,querySelectorAll:selector=>buttons[selector]||[],createElement:element,createTextNode:x=>x,addEventListener:noop};
   const sandbox=vm.createContext({document,window:{addEventListener:noop},localStorage:{getItem:key=>saved[key]??null,setItem:(key,value)=>{saved[key]=value}},devicePixelRatio:1,requestAnimationFrame:noop,console});
   let script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
   script=script.replace(/\}\)\(\);\s*$/,`globalThis.run=code=>eval(code);})();`);

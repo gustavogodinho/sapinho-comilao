@@ -35,7 +35,8 @@ dudu:{name:'Dudu',skin:'#41c55c'},carol:{name:'Carol',skin:'#41c55c'},
 joca:{name:'Joca',skin:'#65bb71'},olivia:{name:'Olivia',skin:'#62d5bb'},
 rafa:{name:'Rafa',skin:'#88c96a',feet:'#4d9950',belly:'#f4dda0',iris:'#4bace1'},
 helena:{name:'Helena',skin:'#b29be0',feet:'#8271b9',belly:'#eee1b7',iris:'#8051b5'},
-angela:{name:'Angela',skin:'#a5d982',feet:'#609e53',belly:'#e8efb0',iris:'#8b5736'}
+angela:{name:'Angela',skin:'#a5d982',feet:'#609e53',belly:'#e8efb0',iris:'#8b5736'},
+miguel:{name:'Miguel',age:10,role:'cantor',skin:'#69c98b',feet:'#3d9058',belly:'#e7d69e',iris:'#4e6ba8'}
 };
 const characterIds=Object.keys(characters);
 let uiScale=1,shortViewport=false;
@@ -62,8 +63,8 @@ $('rank-more').hidden=ranking.length<=3;$('rank-more').textContent=rankExpanded?
 function openRank(button){rankReturn=button;rankExpanded=false;$('ranking').hidden=false;renderRank();$('rank-close').focus()}
 $('rank-more').onclick=()=>{rankExpanded=!rankExpanded;renderRank()};
 $('rank-open').onclick=()=>openRank($('rank-open'));$('rank-end').onclick=()=>openRank($('rank-end'));$('rank-close').onclick=()=>{$('ranking').hidden=true;rankReturn?.focus()};
-const outfits={dudu:{hat:1,glasses:0,top:1,bottom:0,shoes:0},carol:{hat:2,glasses:0,top:0,bottom:0,shoes:0},joca:{hat:3,glasses:1,top:6,bottom:1,shoes:3},olivia:{hat:2,glasses:0,top:5,bottom:0,shoes:3},rafa:{hat:0,glasses:0,top:3,bottom:4,shoes:1},helena:{hat:5,glasses:0,top:4,bottom:0,shoes:3},angela:{hat:6,glasses:0,top:7,bottom:4,shoes:4}};
-const choices={hat:['Sem chapéu','Boné azul','Laço rosa','Chapéu de explorador','Coroa','Flor da lagoa','Chapéu de peão'],glasses:['Sem óculos','Óculos redondos','Óculos de sol','Óculos vermelhos'],top:['Sem camiseta','Corinthians branca','Corinthians preta','Camiseta azul','Camiseta rosa','Blusa roxa','Blusa laranja','Camisa xadrez vermelha'],bottom:['Sem shorts','Shorts azul','Shorts vermelho','Calça roxa','Calça jeans'],shoes:['Sem tênis','Tênis vermelhos','Tênis azuis','Tênis amarelos','Botinhas marrons']};
+const outfits={dudu:{hat:1,glasses:0,top:1,bottom:0,shoes:0},carol:{hat:2,glasses:0,top:0,bottom:0,shoes:0},joca:{hat:3,glasses:1,top:6,bottom:1,shoes:3},olivia:{hat:2,glasses:0,top:5,bottom:0,shoes:3},rafa:{hat:0,glasses:0,top:3,bottom:4,shoes:1},helena:{hat:5,glasses:0,top:4,bottom:0,shoes:3},angela:{hat:6,glasses:0,top:7,bottom:4,shoes:4},miguel:{hat:0,glasses:0,top:8,bottom:1,shoes:2}};
+const choices={hat:['Sem chapéu','Boné azul','Laço rosa','Chapéu de explorador','Coroa','Flor da lagoa','Chapéu de peão'],glasses:['Sem óculos','Óculos redondos','Óculos de sol','Óculos vermelhos'],top:['Sem camiseta','Corinthians branca','Corinthians preta','Camiseta azul','Camiseta rosa','Blusa roxa','Blusa laranja','Camisa xadrez vermelha','Jaqueta de cantor'],bottom:['Sem shorts','Shorts azul','Shorts vermelho','Calça roxa','Calça jeans'],shoes:['Sem tênis','Tênis vermelhos','Tênis azuis','Tênis amarelos','Botinhas marrons']};
 try{const current=localStorage.getItem('sapinho-outfits-v2');const saved=JSON.parse(current||localStorage.getItem('sapinho-outfits-v1')||'{}');for(const who of characterIds)for(const slot of Object.keys(choices)){const n=saved[who]?.[slot];if(Number.isInteger(n)&&n>=0&&n<choices[slot].length)outfits[who][slot]=slot==='top'&&!current?[0,3,4,5,6,1,2][n]:n}}catch{}
 let night=false,raining=false,muted=false,rainSound=null,lastChime=-1;
 let frog={x:160,y:0,vy:0,facing:1},flies=[],particles=[],labels=[];
@@ -82,6 +83,11 @@ const [x,y,r]=curls[i];ellipse(c,x,y,r+1,r,'#cf591f');ellipse(c,x,y-1,r-1,r-1,['
 c.strokeStyle=i%2?'#ffbc61':'#ffc36b';c.lineWidth=2.5;c.beginPath();c.arc(x-2,y-2,r*.5,-.9,Math.PI*1.35);c.stroke();
 c.strokeStyle='#d56224';c.lineWidth=1.7;c.beginPath();c.arc(x+2,y+2,r*.3,.1,Math.PI*1.4);c.stroke();
 }
+}
+function drawMiguelHair(c,front){
+const curls=front?[[-30,-91,8],[-15,-95,9],[0,-92,9],[15,-95,9],[30,-90,8]]:[[-44,-80,12],[-42,-98,13],[-30,-111,13],[-14,-117,13],[3,-116,14],[20,-111,13],[37,-98,13],[43,-80,12]];
+if(!front)ellipse(c,0,-97,46,25,'#26354c');
+for(const [x,y,r] of curls){ellipse(c,x,y,r+1,r,'#273951');ellipse(c,x-2,y-2,r-2,r-2,'#3f5872');c.strokeStyle='#829bb7';c.lineWidth=2;c.beginPath();c.arc(x-2,y-2,r*.45,-.8,Math.PI*1.3);c.stroke()}
 }
 function drawFrog(c,x,y,type,scale=1,facing=1,aura=false,animate=false){
 const o=outfits[type],look=characters[type],skin=look.skin,feet=look.feet||'#279f50',air=animate&&frog.y>0,walk=animate&&moving&&!air?Math.sin(walkCycle):0;
@@ -104,9 +110,10 @@ for(let i=-40;i<40;i+=12){c.fillStyle='#7e3038';c.fillRect(i,-50,5,50);c.fillSty
 for(let y=-47;y<0;y+=10){c.fillStyle='#f2a08a';c.fillRect(-40,y,80,2)}
 path(c,[[0,-40],[0,-4]],'#ffe5be',2);for(const y of [-22,-13,-6])ellipse(c,1,y,1.8,1.8,'#fff1cf');
 }else if(o.top>=3){c.fillStyle='#fff4d9';c.fillRect(-40,-28,80,5)}else{c.fillStyle=o.top===1?'#242831':'#fffdf5';if(o.top===2)for(let i=-30;i<40;i+=10)c.fillRect(i,-50,3,50);c.fillRect(-40,-43,80,5)}c.restore()}
+if(o.top===8){c.save();c.beginPath();c.ellipse(0,-26,37,23,0,0,Math.PI*2);c.clip();c.fillStyle='#2c245f';c.fillRect(-40,-48,80,48);path(c,[[0,-48],[0,1]],'#f2c85b',3);for(const [sx,sy] of [[-22,-32],[21,-25],[13,-8]])ellipse(c,sx,sy,3,3,'#f7e27c');c.restore()}
 // Badge sits on the exposed chest, below the face, with a white backing.
 if(o.top===1||o.top===2){c.save();c.translate(-17,-12);ellipse(c,0,0,9,10,'#fffdf5');path(c,[[-7,-7],[7,7]],'#cc3948',2);path(c,[[7,-7],[-7,7]],'#cc3948',2);path(c,[[0,-9],[0,8]],'#cc3948',2);c.strokeStyle='#30313a';c.lineWidth=1.6;c.beginPath();c.arc(0,0,6,0,Math.PI*2);c.stroke();ellipse(c,0,0,3,3,'#30313a');path(c,[[-7,6],[0,10],[7,6]],'#cc3948',2);c.restore()}
-if(type==='rafa')drawRafaCurls(c,false);
+if(type==='rafa')drawRafaCurls(c,false);else if(type==='miguel')drawMiguelHair(c,false);
 ellipse(c,0,-49,43,26,skin);
 for(const ex of [-24,24]){ellipse(c,ex,-68,19,22,skin);ellipse(c,ex,-69,13,16,'#fff');if(look.iris)ellipse(c,ex+3,-67,9,11,look.iris);ellipse(c,ex+(aura?5:3),-67,look.iris?4:aura?5:6,9,'#253f41');ellipse(c,ex+5,-70,2,3,'#fff')}
 ellipse(c,-31,-43,7,4,'#ff9db7');ellipse(c,31,-43,7,4,'#ff9db7');
@@ -121,6 +128,11 @@ else if(croakTime>0&&animate)ellipse(c,7,-40,13,9,'#274e3a');else if(type==='raf
 ellipse(c,3,-39,15,10,'#355442');ellipse(c,4,-33,8,3,'#ef9992');
 for(const tx of [-6,9]){c.fillStyle='#fffbea';c.beginPath();c.moveTo(tx-3,-46);c.lineTo(tx+3,-46);c.lineTo(tx+1,-39);c.closePath();c.fill()}
 }else{c.strokeStyle='#27503e';c.lineWidth=3;c.beginPath();c.arc(4,-48,13,.1,Math.PI-.1);c.stroke()}
+if(type==='miguel'){
+drawMiguelHair(c,true);
+ellipse(c,4,-41,14,10,'#3e2940');ellipse(c,5,-37,7,3,'#f19aab');
+path(c,[[29,-22],[45,-3]],'#38485c',4);ellipse(c,48,-7,8,10,'#4b5f78');ellipse(c,48,-9,5,6,'#d7e9f2');path(c,[[43,3],[53,7]],'#38485c',3);
+}
 if(o.glasses){const color=o.glasses===3?'#eb587c':'#384764';for(const ex of [-24,24]){if(o.glasses===2)ellipse(c,ex,-68,16,13,'#33495e');c.strokeStyle=color;c.lineWidth=3;c.beginPath();c.ellipse(ex,-68,16,14,0,0,Math.PI*2);c.stroke();path(c,[[ex-8,-73],[ex-2,-78]],'#d7faff',2)}path(c,[[-8,-68],[8,-68]],color,3)}
 c.save();if(type==='rafa')c.translate(0,-14);
 if(o.hat===1){ellipse(c,-9,-91,29,12,'#2376cc');ellipse(c,23,-85,25,5,'#184f9c')}
@@ -484,6 +496,13 @@ const barW=W-56,progress=clamp((frog.x-START_X)/(finishX()-START_X),0,1);ctx.fil
 if(croakTime>0)text('Ribbit!',frog.x-camera,ground-frog.y-125,22,'#7453a2');
 }
 function frame(ts){const dt=last===null?0:Math.max(0,(ts-last)/1000);last=ts;if(state==='playing'&&!document.hidden){let left=Math.min(dt,.25);while(left>0&&state==='playing'){const step=Math.min(left,1/60);update(step);left-=step}}draw();requestAnimationFrame(frame)}
+// Miguel is added here so the character card stays easy to maintain alongside the canvas UI.
+const characterMenu=document.querySelector('.characters');
+if(characterMenu){
+const b=document.createElement('button');b.className='character';b.dataset.character='miguel';b.setAttribute('aria-pressed','false');
+const preview=document.createElement('canvas');preview.id='miguel';preview.width=240;preview.height=230;preview.setAttribute('aria-hidden','true');
+b.append(preview,document.createTextNode('Sapo Miguel · 10 anos'));characterMenu.append(b)
+}
 for(const b of document.querySelectorAll('[data-character]'))b.addEventListener('click',()=>{character=b.dataset.character;document.querySelectorAll('[data-character]').forEach(c=>c.setAttribute('aria-pressed',String(c===b)));refreshOutfits()});
 function restart(){runSaved=false;totalScore=totalCaught=0;start()}$('play').onclick=()=>{if(setupStep===3&&playerName)restart()};$('again').onclick=restart;$('next').onclick=()=>{if(level<levels.length-1){level++;restart()}};$('choose').onclick=chooseLevel;
 for(const [id,dir] of [['left',-1],['right',1]]){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);touches.set(e.pointerId,dir)});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,e=>touches.delete(e.pointerId))}

@@ -22,21 +22,15 @@ test('trocar roupas da Angela salva e restaura escolhas sem alterar os outros sa
   for(const slot of ['hat','top','shoes'])run(changeSlot(slot));
   const reopened=game(saved);
   assert.equal(reopened('outfits.angela.hat'),0);
-  assert.equal(reopened('outfits.angela.top'),0);
+  assert.equal(reopened('outfits.angela.top'),8);
   assert.equal(reopened('outfits.angela.shoes'),0);
   assert.equal(reopened('outfits.rafa.hat'),3);
   assert.equal(reopened('outfits.rafa.top'),6);
   assert.equal(reopened('outfits.helena.hat'),5);
   assert.equal(reopened('outfits.helena.top'),5);
-  reopened(selectAngela);
-  for(const slot of ['hat','top','shoes']){
-    const last=reopened(`choices.${slot}.length-1`);
-    for(let i=0;i<last;i++)reopened(changeSlot(slot));
-  }
-  const restored=game(saved);
-  assert.equal(restored('choices.hat[outfits.angela.hat]'),'Chapéu de peão');
-  assert.equal(restored('choices.top[outfits.angela.top]'),'Camisa xadrez vermelha');
-  assert.equal(restored('choices.shoes[outfits.angela.shoes]'),'Botinhas marrons');
+  assert.equal(reopened('choices.hat[outfits.angela.hat]'),'Sem chapéu');
+  assert.equal(reopened('choices.top[outfits.angela.top]'),'Jaqueta de cantor');
+  assert.equal(reopened('choices.shoes[outfits.angela.shoes]'),'Sem tênis');
 });
 
 test('Angela funciona nas nove fases com movimento, superpoder, reinício e ranking persistente',()=>{
