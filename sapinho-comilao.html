@@ -501,7 +501,7 @@ const characterMenu=document.querySelector('.characters');
 if(characterMenu){
 const b=document.createElement('button');b.className='character';b.dataset.character='miguel';b.setAttribute('aria-pressed','false');
 const preview=document.createElement('canvas');preview.id='miguel';preview.width=240;preview.height=230;preview.setAttribute('aria-hidden','true');
-b.append(preview,document.createTextNode('Sapo Miguel · 10 anos'));characterMenu.append(b)
+b.append(preview,document.createTextNode('Sapo Miguel'));characterMenu.append(b)
 }
 for(const b of document.querySelectorAll('[data-character]'))b.addEventListener('click',()=>{character=b.dataset.character;document.querySelectorAll('[data-character]').forEach(c=>c.setAttribute('aria-pressed',String(c===b)));refreshOutfits()});
 function restart(){runSaved=false;totalScore=totalCaught=0;start()}$('play').onclick=()=>{if(setupStep===3&&playerName)restart()};$('again').onclick=restart;$('next').onclick=()=>{if(level<levels.length-1){level++;restart()}};$('choose').onclick=chooseLevel;
