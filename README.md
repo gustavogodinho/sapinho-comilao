@@ -12,8 +12,9 @@ Abra `sapinho-comilao.html` em um navegador. Esse é o arquivo principal e a ver
 - Na Travessia da Marginal, cada toque dá um pulinho em uma das quatro direções. Atravesse seis trechos com carros e ônibus, espere nos canteiros e colete mosquinhas nas áreas seguras. Colisões devolvem o sapinho ao último canteiro, sem perder pontos ou vidas. Quatro alimentos ativam sete segundos de trânsito lento; os veículos continuam sendo obstáculos.
 - O cenário da Marginal é uma interpretação ilustrada da região da Ponte Estaiada, com rio, prédios, cabos da ponte, ciclovia, asfalto e veículos vistos de cima. Referência: [Ponte Octavio Frias de Oliveira, Prefeitura de São Paulo](https://www.prefeitura.sp.gov.br/web/comunicacao/w/noticias/125744).
 - Os ícones das fases representam seus alimentos ou percursos: mosca, mosquito, grilo, mariposa, besouro, minhoca, camarão, vitória-régia e avenida.
-- Seis personagens com guarda-roupa personalizável salvo no navegador: Dudu, Carol, Joca, Olivia, Rafa e Helena.
+- Sete personagens com guarda-roupa personalizável salvo no navegador: Dudu, Carol, Joca, Olivia, Rafa, Helena e Angela.
 - Rafa tem cachinhos ruivos volumosos, olhos azuis, sardinhas e um sorriso com dois dentinhos, inspirado no Dennis de Hotel Transilvânia. Helena tem tons de lavanda, olhos violetas e uma flor da lagoa, também disponível no guarda-roupa dos outros sapinhos.
+- Angela é verde-clara, com olhos castanhos, cílios delicados e sorriso alegre. Seu visual inicial tem chapéu de peão marrom com abas curvas, camisa xadrez vermelha, jeans e botinhas marrons. As novas peças também estão disponíveis no guarda-roupa de todos os personagens.
 - Dia, noite, chuva, sons sintetizados e superpoder automático.
 - Escolha de fases após o look e botão para sair da fase; pontuações salvas por fase concluída.
 - Controles de teclado e botões de toque.
